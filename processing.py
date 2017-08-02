@@ -37,8 +37,41 @@ def process(rows):
 	rows.insert(3, cal_dif(date1, date2))
 	return rows;
 	
+def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
+	date2 = "Mar 2, 2016, 10:04:59 AM"):
 	
+	info1 = date1.split(", ")
+	info2 = date2.split(", ")
 
+	date1, year1, time1 = info1[0], int(info1[1]), info1[2]
+	mon1, day1 = date1.split()[0], int(date1.split()[1])
+	
+	date2, year2, time2 = info2[0], int(info2[1]), info2[2]
+	mon2, day2 = date2.split()[0], int(date2.split()[1])
+	
+	d1, d2 = date(year1, dic[mon1], day1), date(year2, dic[mon2], day2) 
+	
+	diff_days = (d2 - d1).days
+	
+	seconds = diff_days * DAY_IN_SEC
+	t1, p1 = time1.split()[0], time1.split()[1]
+	t2, p2 = time2.split()[0], time2.split()[1]
+	start_dt = datetime.strptime(t1, '%H:%M:%S')
+	end_dt = datetime.strptime(t2, '%H:%M:%S')
+	
+	diff = (end_dt - start_dt)
+	
+	# This somehow captures the four cases well.
+	if p1 == "AM":
+		seconds += 12 * HOUR_IN_SEC
+	if p2 == "AM":
+		seconds -= 12 * HOUR_IN_SEC
+	
+	seconds += diff.seconds
+	return seconds
+
+
+	
 def separate_data(filename="./data/output.csv"):
 	csvfile = open(filename, "r")
 	csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -84,39 +117,6 @@ def main():
 	separate_data()
 	print("Finished.")
 
-
-def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
-	date2 = "Mar 2, 2016, 10:04:59 AM"):
-	
-	info1 = date1.split(", ")
-	info2 = date2.split(", ")
-
-	date1, year1, time1 = info1[0], int(info1[1]), info1[2]
-	mon1, day1 = date1.split()[0], int(date1.split()[1])
-	
-	date2, year2, time2 = info2[0], int(info2[1]), info2[2]
-	mon2, day2 = date2.split()[0], int(date2.split()[1])
-	
-	d1, d2 = date(year1, dic[mon1], day1), date(year2, dic[mon2], day2) 
-	
-	diff_days = (d2 - d1).days
-	
-	seconds = diff_days * DAY_IN_SEC
-	t1, p1 = time1.split()[0], time1.split()[1]
-	t2, p2 = time2.split()[0], time2.split()[1]
-	start_dt = datetime.strptime(t1, '%H:%M:%S')
-	end_dt = datetime.strptime(t2, '%H:%M:%S')
-	
-	diff = (end_dt - start_dt)
-	
-	# This somehow captures the four cases well.
-	if p1 == "AM":
-		seconds += 12 * HOUR_IN_SEC
-	if p2 == "AM":
-		seconds -= 12 * HOUR_IN_SEC
-	
-	seconds += diff.seconds
-	return seconds
 	
 if __name__ == "__main__":
 	main()
