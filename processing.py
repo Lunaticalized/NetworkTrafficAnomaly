@@ -11,24 +11,25 @@ MIN_IN_SEC = 60
 HOUR_IN_SEC = 60 * MIN_IN_SEC
 DAY_IN_SEC = 24 * HOUR_IN_SEC
 """
-flow type
-first packet time
-storage time
-source IP
-source port
-dest IP
-dest port
-source Byte
-dest byte 
-total byte
-soure packet
-dest packet
-total packet
-protocol
-ICMP type
-source flag
-dest flag
--- conn duration
+0  flow type
+1  first packet time
+2  storage time
+3  -- conn duration
+4  source IP
+5  source port
+6  dest IP
+7  dest port
+8  source Byte
+9  dest byte 
+10 total byte
+11 soure packet
+12 dest packet
+13 total packet
+14 protocol
+15 ICMP type
+16 source flag
+17 dest flag
+
 -- flag
 """	
 #add duration, nice/evil flag, 
