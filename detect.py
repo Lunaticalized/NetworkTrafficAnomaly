@@ -21,17 +21,26 @@ import csv
 
 -- flag
 """	
-def iterate_data(filename="./data/output_standard.csv"):
+def iterate_data(filename="./data/output_standard_sanitized.csv"):
 	csvfile = open(filename, "r")
 	csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
 	
 	users = dict() # key: dest ip        value: all ips that succ connect to it
 	i = 1
+	pm = 0
+	am = 0
+	print("started running")
 	for rows in csvreader:
-		if rows[9] == "N/A":
-			print(rows)
+		#print(rows[2])
+		if "PM" in rows[1]:
+			pm += 1
+		if "AM" in rows[1]:
+			am += 1
+		i += 1
+		if i % 1000000 == 0:
+			print(i)
+	print(am, pm)
 	csvfile.close()
-	
 	
 	#conn_num_file = open("./data/conn_num_count.csv", "w")
 	
@@ -56,7 +65,6 @@ def main():
 	iterate_data()
 	print("Finished.")
 
-	
 if __name__ == "__main__":
 	main()
 	#testing()

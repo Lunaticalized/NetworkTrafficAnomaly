@@ -36,6 +36,11 @@ DAY_IN_SEC = 24 * HOUR_IN_SEC
 def process(rows):
 	date1, date2 = rows[1], rows[2]
 	rows.insert(3, cal_dif(date1, date2))
+	for i in range(len(rows) - 4):
+		if rows[i] == "N/A":
+			rows[i] = "-1"
+		if i in [6, 7, 8, 9, 10, 11, 12, 13]:
+			rows[i] = "".join(rows[i].split(","))
 	return rows;
 	
 def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
@@ -76,44 +81,46 @@ def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
 def separate_data(filename="./data/output.csv"):
 	csvfile = open(filename, "r")
 	csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
-	fileStandard = open("./data/output_standard.csv", "w+", newline="")
-	fileA = open("./data/output_typeA.csv", "w+", newline="")
-	fileB = open("./data/output_typeB.csv", "w+", newline="")
-	fileC = open("./data/output_typeC.csv", "w+", newline="")
+	fileStandard = open("./data/output_standard_sanitized.csv", "w+", newline="")
+	#fileA = open("./data/output_typeA.csv", "w+", newline="")
+	#fileB = open("./data/output_typeB.csv", "w+", newline="")
+	#fileC = open("./data/output_typeC.csv", "w+", newline="")
 	i = 0
 	standard_writer = csv.writer(fileStandard, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-	typeA_writer = csv.writer(fileA, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-	typeB_writer = csv.writer(fileB, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-	typeC_writer = csv.writer(fileC, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	#typeA_writer = csv.writer(fileA, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	#typeB_writer = csv.writer(fileB, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	#typeC_writer = csv.writer(fileC, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for rows in csvreader:
 		if "Flow Type" in rows[0]:
 			rows.insert(3, "Conn time")
+			for i in range(len(rows)):
+				rows[i] = "_".join(rows[i].split())
 			standard_writer.writerow(rows)
-			typeA_writer.writerow(rows)
-			typeB_writer.writerow(rows)
-			typeC_writer.writerow(rows)
+			#typeA_writer.writerow(rows)
+			#typeB_writer.writerow(rows)
+			#typeC_writer.writerow(rows)
 		else:
 			rows = process(rows)
-			if "Standard" in rows[0]:
-				standard_writer.writerow(rows)
-			elif "A" in rows[0]:
-				typeA_writer.writerow(rows)
-			elif "B" in rows[0]:
-				typeB_writer.writerow(rows)
-			elif "C" in rows[0]:
-				typeC_writer.writerow(rows)	
+			standard_writer.writerow(rows)
+			#if "Standard" in rows[0]:
+			#	standard_writer.writerow(rows)
+			#elif "A" in rows[0]:
+			#	typeA_writer.writerow(rows)
+			#elif "B" in rows[0]:
+			#	typeB_writer.writerow(rows)
+			#elif "C" in rows[0]:
+			#	typeC_writer.writerow(rows)	
 		i += 1
 		if (i % 100000 == 0):
 			print(str(i) + " entries processed.")
 		
 	csvfile.close()	
-	fileA.close()
-	fileB.close()
-	fileC.close()
+	#fileA.close()
+	#fileB.close()
+	#fileC.close()
 
 def main():
 	print("Starting off...")
-	
 	print("Begin separating data files")
 	separate_data()
 	print("Finished.")
