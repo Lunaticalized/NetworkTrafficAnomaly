@@ -81,7 +81,7 @@ def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
 def separate_data(filename="./data/output.csv"):
 	csvfile = open(filename, "r")
 	csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
-	fileStandard = open("./data/output_standard_sanitized.csv", "w+", newline="")
+	fileStandard = open("./data/output_standard_sanitized_shit.csv", "w+", newline="")
 	#fileA = open("./data/output_typeA.csv", "w+", newline="")
 	#fileB = open("./data/output_typeB.csv", "w+", newline="")
 	#fileC = open("./data/output_typeC.csv", "w+", newline="")
@@ -101,7 +101,11 @@ def separate_data(filename="./data/output.csv"):
 			#typeC_writer.writerow(rows)
 		else:
 			rows = process(rows)
-			standard_writer.writerow(rows)
+			try:
+				shit = int(rows[7])
+				standard_writer.writerow(rows)
+			except TypeError:
+				pass
 			#if "Standard" in rows[0]:
 			#	standard_writer.writerow(rows)
 			#elif "A" in rows[0]:
