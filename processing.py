@@ -1,5 +1,5 @@
 """
-Code written for 2017 MIT summer research internship - big data security project
+Code written for 2017 MIT summer research project - big data security project
 Contributors:  Andrew Bing An Chang, Xiating Ouyang, Lumin Xu 
 """
 import csv
@@ -14,33 +14,37 @@ DAY_IN_SEC = 24 * HOUR_IN_SEC
 0  flow type
 1  first packet time
 2  storage time
-3  -- conn duration
-4  source IP
-5  source port
-6  dest IP
-7  dest port
-8  source Byte
-9  dest byte 
-10 total byte
-11 soure packet
-12 dest packet
-13 total packet
-14 protocol
-15 ICMP type
-16 source flag
-17 dest flag
+3  source IP
+4  source port
+5  dest IP
+6  dest port
+7  source Byte
+8  dest byte 
+9 total byte
+10 soure packet
+11 dest packet
+12 total packet
+13 protocol
+14 ICMP type
+15 source flag
+16 dest flag
 
 -- flag
 """	
-#add duration, nice/evil flag, 
+ 
+def ipv6AddColon(ipv6):
+	segs = []
+	i = 0
+	for i in range(8):
+		segs.append(ipv6[4*i:4*(i+1)])
+	return ":".join(segs)
 def process(rows):
-	date1, date2 = rows[1], rows[2]
-	rows.insert(3, cal_dif(date1, date2))
 	for i in range(len(rows) - 4):
 		if rows[i] == "N/A":
 			rows[i] = "-1"
-		if i in [6, 7, 8, 9, 10, 11, 12, 13]:
+		if i in [7, 8, 9, 10, 11, 12]:
 			rows[i] = "".join(rows[i].split(","))
+	rows[3], rows[5] = ipv6AddColon(rows[3]), ipv6AddColon(rows[5])
 	return rows;
 	
 def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
@@ -81,7 +85,7 @@ def cal_dif(date1 = "Mar 1, 2016, 9:44:59 PM",
 def separate_data(filename="./data/output.csv"):
 	csvfile = open(filename, "r")
 	csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
-	fileStandard = open("./data/output_standard_sanitized_shit.csv", "w+", newline="")
+	fileStandard = open("./data/output_standard_sanitized_ipchanged.csv", "w", newline="")
 	#fileA = open("./data/output_typeA.csv", "w+", newline="")
 	#fileB = open("./data/output_typeB.csv", "w+", newline="")
 	#fileC = open("./data/output_typeC.csv", "w+", newline="")
@@ -92,7 +96,6 @@ def separate_data(filename="./data/output.csv"):
 	#typeC_writer = csv.writer(fileC, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for rows in csvreader:
 		if "Flow Type" in rows[0]:
-			rows.insert(3, "Conn time")
 			for i in range(len(rows)):
 				rows[i] = "_".join(rows[i].split())
 			standard_writer.writerow(rows)
@@ -104,7 +107,7 @@ def separate_data(filename="./data/output.csv"):
 			try:
 				shit = int(rows[7])
 				standard_writer.writerow(rows)
-			except TypeError:
+			except ValueError:
 				pass
 			#if "Standard" in rows[0]:
 			#	standard_writer.writerow(rows)
@@ -118,7 +121,8 @@ def separate_data(filename="./data/output.csv"):
 		if (i % 100000 == 0):
 			print(str(i) + " entries processed.")
 		
-	csvfile.close()	
+	csvfile.close()
+	fileStandard.close()	
 	#fileA.close()
 	#fileB.close()
 	#fileC.close()
@@ -128,7 +132,6 @@ def main():
 	print("Begin separating data files")
 	separate_data()
 	print("Finished.")
-
 	
 if __name__ == "__main__":
 	main()

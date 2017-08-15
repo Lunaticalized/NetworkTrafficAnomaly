@@ -16,7 +16,7 @@ def sampling(num, filename="./data/output.csv"):
 	
 def main():
 	print("Begin taking sample")
-	newname = sampling(10000, "./data/output.csv")
+	newname = sampling(10000, "./data/output_standard_sanitized_ipchanged.csv")
 	print("Finished. Result stored at", newname)
 if __name__ == "__main__":
 	main()
