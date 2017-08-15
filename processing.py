@@ -105,7 +105,8 @@ def separate_data(filename="./data/output.csv"):
 		else:
 			rows = process(rows)
 			try:
-				shit = int(rows[7])
+				print(rows[6])
+				shit = int(rows[6])
 				standard_writer.writerow(rows)
 			except ValueError:
 				pass
